@@ -1,0 +1,52 @@
+# Core Web Framework
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+jinja2==3.1.5
+python-multipart==0.0.20
+
+# Twilio Integration
+twilio==9.4.0
+
+# Database
+pymongo==4.10.1
+
+# Environment Variables
+python-dotenv==1.0.1
+
+# WebSocket Support
+websockets==14.1
+
+# Speech Recognition (Deepgram)
+deepgram-sdk==3.8.3
+
+# LangChain & LLM
+langchain-google-genai==2.0.8
+langchain-core==0.3.28
+
+# LlamaIndex Components
+llama-index-core==0.12.10
+llama-index-embeddings-huggingface==0.4.1
+llama-index-llms-gemini==0.4.0
+
+# Embeddings & Transformers
+sentence-transformers==3.3.1
+transformers==4.47.1
+torch==2.5.1
+
+# Translation
+deep-translator==1.11.4
+langdetect==1.0.9
+
+# HTTP Requests
+requests==2.32.3
+
+# Utilities
+typing-extensions==4.12.2
+pydantic==2.10.5
+pydantic-core==2.27.2
+
+# CORS Middleware (included with FastAPI but explicitly listed)
+python-jose[cryptography]==3.3.0
+
+# Additional dependencies for production
+gunicorn==23.0.0
