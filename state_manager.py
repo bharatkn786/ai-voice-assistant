@@ -36,15 +36,11 @@ class StateManager:
     
     def register_call(self, call_sid: str, initial_state: str = 'INITIAL') -> bool:
         """Register a new call in the system - fast path for new calls"""
-        # Quick check without lock first
-        if call_sid in self._call_states:
-            print(f"⚠️ Call {call_sid} already registered")
-            return False
-        
         # Only lock for the write operation
         with self._write_lock:
-            # Double-check pattern to avoid race conditions
+            # Single check inside lock is sufficient
             if call_sid in self._call_states:
+                print(f"⚠️ Call {call_sid} already registered")
                 return False
                 
             current_time = asyncio.get_event_loop().time()
@@ -53,18 +49,12 @@ class StateManager:
                 'start_time': current_time,
                 'last_update': current_time
             }
-            # conversation_states and conversation_history use defaultdict, so no need to initialize
             
         print(f"✅ Call {call_sid} registered with state {initial_state}")
         return True
     
     def update_call_state(self, call_sid: str, new_state: str, **additional_data) -> bool:
         """Update a call's state with additional optional data - optimized version"""
-        # Fast fail for non-existent calls
-        if call_sid not in self._call_states:
-            return False
-        
-        # Quick update without heavy locking
         with self._write_lock:
             if call_sid not in self._call_states:
                 return False
@@ -82,13 +72,9 @@ class StateManager:
             
     def set_input_start_time(self, call_sid: str, timestamp=None) -> bool:
         """Set the input start time for a call - optimized version"""
-        if call_sid not in self._call_states:
-            return False
-        
         if timestamp is None:
             timestamp = asyncio.get_event_loop().time()
         
-        # Fast path - direct assignment
         with self._write_lock:
             if call_sid not in self._call_states:
                 return False
@@ -112,23 +98,11 @@ class StateManager:
     
     def get_call_state(self, call_sid: str) -> Dict[str, Any]:
         """Get current state of a call - NO LOCK for read operations"""
-        # Fast path - direct dictionary access without locking
-        state = self._call_states.get(call_sid)
-        if not state:
-            return {}
-        
-        # Return minimal state info for performance
-        return {
-            'status': state.get('status'), 
-            'last_update': state.get('last_update')
-        }
+        # Return direct reference - faster and more complete
+        return self._call_states.get(call_sid, {})
     
     def end_call(self, call_sid: str) -> bool:
         """End a call and clean up its state - optimized cleanup"""
-        # Quick check without lock
-        if call_sid not in self._call_states:
-            return False
-        
         websocket = None
         with self._write_lock:
             if call_sid not in self._call_states:
@@ -158,10 +132,6 @@ class StateManager:
     
     def add_to_conversation_history(self, call_sid: str, user_input: str, response: str) -> bool:
         """Add a new exchange to the conversation history - fast path"""
-        # Fast fail for non-existent calls
-        if call_sid not in self._call_states:
-            return False
-        
         with self._write_lock:
             if call_sid not in self._call_states:
                 return False
@@ -186,14 +156,11 @@ class StateManager:
         if not history:
             return ""
         
-        # Fast string building with list comprehension
+        # Build context string efficiently
         context_parts = ["\n\nPrevious exchanges:\n"]
         for i in range(0, len(history), 2):
             if i + 1 < len(history):
-                context_parts.extend([
-                    f"User asked: {history[i]}\n",
-                    f"Assistant responded: {history[i+1]}\n\n"
-                ])
+                context_parts.append(f"User asked: {history[i]}\nAssistant responded: {history[i+1]}\n\n")
         
         return "".join(context_parts)
     
@@ -210,10 +177,7 @@ class StateManager:
     
     def update_language(self, call_sid: str, language_code: str) -> bool:
         """Update the detected language for a call - fast path"""
-        if call_sid not in self._call_states:
-            return False
-            
-        # Direct assignment - no locking needed for simple updates
+        # Direct assignment to defaultdict - automatically creates entry if needed
         self._conversation_states[call_sid]['detected_lang'] = language_code
         return True
     
@@ -248,9 +212,6 @@ class StateManager:
     
     def register_websocket(self, call_sid: str, websocket) -> bool:
         """Register websocket for a call - minimal locking"""
-        if call_sid not in self._call_states:
-            return False
-            
         with self._write_lock:
             self._active_websockets[call_sid] = websocket
         return True

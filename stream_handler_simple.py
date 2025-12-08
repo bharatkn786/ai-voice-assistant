@@ -4,7 +4,11 @@
 
 
 # working fine before new stream
+# 📍 logging Usage in stream_handler_simple.py:
+# With this code, you only see warnings and errors from Twilio:
 
+# ❌ ERROR and WARNING messages still show
+# ✅ INFO and DEBUG messages are suppressed
 import json
 import base64
 import asyncio
@@ -47,7 +51,6 @@ async def twilio_stream_websocket(websocket: WebSocket):
     current_transcript = ""
     input_timer = None
     silence_timer = None  # Timer for complete silence detection
-    last_speech_time = None  # Track when user last spoke
     silence_count = 0  # 👉 Counts how many times user stayed silent
     deepgram_reconnect_count = 0  # 🔧 Track reconnection attempts
     max_deepgram_reconnects = 10  # 🔧 Maximum reconnection attempts
@@ -180,17 +183,14 @@ async def twilio_stream_websocket(websocket: WebSocket):
                         await start_complete_silence_timer()
 
         async def start_silence_timer():
-            """Starts or resets a 5s silence timeout after user speech"""
-            nonlocal input_timer, silence_timer, last_speech_time
+            """Starts or resets a 3s silence timeout after user speech"""
+            nonlocal input_timer, silence_timer
 
             # Cancel both timers when user speaks
             if input_timer and not input_timer.done():
                 input_timer.cancel()
             if silence_timer and not silence_timer.done():
                 silence_timer.cancel()
-            
-            # Update last speech time
-            last_speech_time = asyncio.get_event_loop().time()
 
             async def handle_timeout():
                 await asyncio.sleep(3)  #chnaged from 4 to 3
@@ -207,7 +207,7 @@ async def twilio_stream_websocket(websocket: WebSocket):
                     await start_complete_silence_timer()
 
             input_timer = asyncio.create_task(handle_timeout())
-            print("⏰ Started speech silence timer (4s)")
+            print("⏰ Started speech silence timer (3s)")
 
         async def forward_audio_to_deepgram():
             nonlocal call_sid, deepgram_ws, deepgram_reconnect_count
