@@ -54,7 +54,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from state_manager import StateManager
 
 # Base URL for webhooks
-BASE_URL = "https://trusts-contained-activists-enhancements.trycloudflare.com"
+BASE_URL = "https://voters-educators-february-analyst.trycloudflare.com"
 load_dotenv(override=True)
 
 # Environment Variables
