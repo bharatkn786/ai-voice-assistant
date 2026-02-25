@@ -54,7 +54,7 @@ from langchain_google_genai import ChatGoogleGenerativeAI
 from state_manager import StateManager
 
 # Base URL for webhooks
-BASE_URL = "https://voters-educators-february-analyst.trycloudflare.com"
+BASE_URL = "https://regularly-participating-routing-judgment.trycloudflare.com"
 load_dotenv(override=True)
 
 # Environment Variables
@@ -67,8 +67,14 @@ twilio_from_number=os.getenv("YOUR_TWILIO_PHONE_NUMBER")
 twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
 
+GROQ_API_KEY = os.getenv("GROQ_API_KEY")
+from langchain_groq import ChatGroq
 
-
+llm = ChatGroq(
+    model="llama-3.3-70b-versatile",  # or "mixtral-8x7b-32768"
+    api_key=GROQ_API_KEY,
+    temperature=0.0
+)
 # Use a model with higher quota limits or fall back to another model
 # Options: gemini-1.0-pro has higher quota limits than gemini-2.5-flash
 try:

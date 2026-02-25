@@ -1,4 +1,8 @@
-
+#                         it is connected to   https://github.com/bharatkn786/ai-voice-assistant.git (ai-voice assisant)it is just before the checking repo is is working fine
+                            # i have just chnaged the gemini to groq ....files cchnged are--- config.py,simple_rag.py
+                            #i have changed the simple rag.py with to retrive the top 5 chuks inspite of 3 earlier and reranker return top3 chunks to llm
+                                # changes the reset timer from 3 to 3.5 async await(3)
+                                #chnaged some points of prompt
 import os
 import threading
 import time
@@ -38,6 +42,7 @@ threading.Thread(target=preload_modules, daemon=True).start()
 
 app = FastAPI()
 templates = Jinja2Templates(directory="templates")
+
 
 
 @app.get("/", response_class=HTMLResponse)

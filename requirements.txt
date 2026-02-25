@@ -50,3 +50,6 @@ python-jose[cryptography]==3.3.0
 
 # Additional dependencies for production
 gunicorn==23.0.0
+
+llama-index-llms-groq
+groq langchain-groq
