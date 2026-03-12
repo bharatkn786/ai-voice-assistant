@@ -1,0 +1,49 @@
+# ── Python cache ──
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+
+# ── Virtual environments ──
+venv/
+.venv/
+env/
+ENV/
+
+# ── Environment / secrets (NEVER bake into image) ──
+.env
+*.env
+.env.*
+!.env.example
+
+# ── IDE / OS files ──
+.git/
+.gitignore
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# ── Logs ──
+*.log
+logs/
+
+# ── Backup folder (not needed in image) ──
+backup/
+
+# ── Documentation ──
+*.md
+!README.md
+
+# ── Test files ──
+test_*.py
+*_test.py
+tests/
+
+# ── Node modules (only relevant if accidentally at root) ──
+node_modules/
+
+# ── Docker files themselves ──
+Dockerfile*
+docker-compose*.yml

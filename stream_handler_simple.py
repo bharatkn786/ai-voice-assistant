@@ -193,7 +193,7 @@ async def twilio_stream_websocket(websocket: WebSocket):
                 silence_timer.cancel()
 
             async def handle_timeout():
-                await asyncio.sleep(3)  #chnaged from 4 to 3
+                await asyncio.sleep(3.5)  #chnaged from 4 to 3
                 if not state_manager.is_call_active(call_sid):
                     return
                 state = state_manager.get_call_state(call_sid)

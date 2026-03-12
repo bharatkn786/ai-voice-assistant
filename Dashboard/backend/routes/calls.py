@@ -63,18 +63,3 @@ def get_call_by_sid(call_sid: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-
-# ---------------------------------------------
-# 5. RECENT CALLS
-# ---------------------------------------------
-@router.get("/recent")
-def get_recent_calls(limit: int = 10):
-    try:
-        calls = list(
-            calls_collection.find({}, {"_id": 0})
-            .sort("created_at", -1)
-            .limit(limit)
-        )
-        return {"success": True, "data": calls}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))

@@ -23,3 +23,19 @@
 
 # if __name__ == "__main__":
 #     test_gemini_api()
+
+import os
+from dotenv import load_dotenv
+from groq import Groq
+
+load_dotenv()
+
+client = Groq(api_key=os.getenv("GROQ_API_KEY"))
+
+response = client.chat.completions.create(
+    model="llama-3.3-70b-versatile",
+    messages=[{"role": "user", "content": "Hello, how are you?"}],
+    temperature=0.0
+)
+
+print(response.choices[0].message.content)

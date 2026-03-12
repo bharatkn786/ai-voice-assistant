@@ -531,12 +531,28 @@ llama_debug = LlamaDebugHandler(print_trace_on_end=True)
 callback_manager = CallbackManager([llama_debug])
 
 # Configure global settings with embeddings and LLM
-llm = Gemini(
-    api_key=config.GOOGLE_API_KEY, 
-    model_name="gemini-2.5-flash",
-    temperature=0.0,  # Reduced for faster, more deterministic responses
-    streaming=True  # Enable streaming
+
+
+# llm = Gemini(
+#     api_key=config.GOOGLE_API_KEY, 
+#     model_name="gemini-2.5-flash",
+#     temperature=0.0,  # Reduced for faster, more deterministic responses
+#     streaming=True  # Enable streaming
+# )
+
+from llama_index.llms.groq import Groq
+
+llm = Groq(
+    model="llama-3.3-70b-versatile",
+    api_key=config.GROQ_API_KEY,
+    temperature=0.1
 )
+
+Settings.llm = llm
+
+
+
+
 embed_model = HuggingFaceEmbedding(model_name="BAAI/bge-small-en-v1.5")
 
 # Configure settings
@@ -602,7 +618,7 @@ def create_rag_system():
     # Create retriever with good configuration
     # Retrieve more chunks initially so reranker has more to work with
     retriever = index.as_retriever(
-        similarity_top_k=3  # Get top 3 chunks (cast wide net)
+        similarity_top_k=5  # Get top 5 chunks (cast wide net)
     )
     
     # Create reranker for improved retrieval precision
@@ -631,12 +647,17 @@ CONTINUE: [Your short answer to their question]
 FOLLOWUP: [A contextual follow-up question based on your answer]
 
 IMPORTANT INSTRUCTIONS:
+ If the user mispronounces or slightly changes the name (e.g., Chikara, Chitakra, Chitkra, etc.), always understand that they are referring to Chitkara University.
+- If the user mistakenly mentions another university name but context suggests Chitkara, treat it as Chitkara University.or hte ame is fully different thn tell user that u can only provide the info regarding the chitakra univsersity
+- If the user mentions an incorrect or similar course name (e.g., BVA instead of BCA or BBA), politely clarify OR provide information about the closest relevant course offered at Chitkara University.
+- Always keep the conversation focused strictly on Chitkara University.
 1. The context below contains REAL university information that you MUST use to answer questions
-2. NEVER say "information not available" or "context does not contain" if relevant information is present
+2. NEVER say "information not available" or "context does not contain" if relevant information is present..this  is important just provide the info regarding the query
 3. Look carefully through ALL context sections for relevant details
-4. Your main answer MUST be EXTREMELY SHORT - maximum 2-3 lines only, no more than 70 words
+4. Your main answer MUST be SHORT - maximum 2-3 lines only
 5. Answer in a helpful, conversational tone as if you're an admissions counselor and 
 Convert only currency amounts to Indian words (e.g., 150000 → one lakh fifty thousand); keep phone numbers, IDs, and years as digits
+if user has asked about a certain course jsut tell him about the speciailization avaivalble and course fees.
 6. Follow-up question should be relevant to what you just explained:
    - If explained fees: ask about scholarships or payment plans
    - If explained course: ask about placements or specializations

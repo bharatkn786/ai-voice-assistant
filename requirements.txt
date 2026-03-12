@@ -1,52 +1,119 @@
+# # Core Web Framework
+# fastapi==0.115.6
+# uvicorn[standard]==0.34.3
+# jinja2==3.1.6
+# python-multipart==0.0.20
+
+# # Twilio Integration
+# # twilio==9.4.0
+# twilio==9.6.3
+
+# # Database
+# pymongo==4.10.1
+
+# # Environment Variables
+# python-dotenv==1.0.1
+
+# # WebSocket Support
+# websockets==14.1
+
+# # Speech Recognition (Deepgram)
+# # deepgram-sdk==3.8.3
+# deepgram-sdk==4.6.0
+# # LangChain & LLM
+# langchain-google-genai==2.0.8
+# langchain-core==0.3.28
+
+# # LlamaIndex Components
+# llama-index-core==0.12.10
+# llama-index-embeddings-huggingface==0.6.1
+# llama-index-llms-gemini==0.4.0
+
+# # Embeddings & Transformers
+# sentence-transformers==3.3.1
+# transformers==4.47.1
+# # torch==2.5.1
+# torch==2.8.0
+
+# # Translation
+# deep-translator==1.11.4
+# langdetect==1.0.9
+
+# # HTTP Requests
+# requests==2.32.3
+
+# # Utilities
+# typing-extensions==4.12.2
+# pydantic==2.10.5
+# pydantic-core==2.27.2
+
+# # CORS Middleware (included with FastAPI but explicitly listed)
+# python-jose[cryptography]==3.3.0
+
+# # Additional dependencies for production
+# gunicorn==23.0.0
+
+# llama-index-llms-groq
+# groq
+# langchain-groq
+
+
 # Core Web Framework
-fastapi==0.115.6
-uvicorn[standard]==0.34.0
-jinja2==3.1.5
+fastapi==0.115.12
+uvicorn[standard]==0.34.3
+jinja2==3.1.6
 python-multipart==0.0.20
 
 # Twilio Integration
-twilio==9.4.0
+twilio==9.6.3
 
 # Database
-pymongo==4.10.1
+pymongo==4.16.0
 
 # Environment Variables
-python-dotenv==1.0.1
+python-dotenv==1.1.0
 
 # WebSocket Support
-websockets==14.1
+websockets==15.0.1
 
 # Speech Recognition (Deepgram)
-deepgram-sdk==3.8.3
+deepgram-sdk==4.6.0
 
 # LangChain & LLM
-langchain-google-genai==2.0.8
-langchain-core==0.3.28
+# langchain-google-genai==2.0.10
+# langchain-core==1.2.14
+langchain-google-genai==2.0.10
+langchain-core>=0.3.37
 
 # LlamaIndex Components
-llama-index-core==0.12.10
-llama-index-embeddings-huggingface==0.4.1
-llama-index-llms-gemini==0.4.0
+llama-index-core==0.14.15
+llama-index-embeddings-huggingface==0.6.1
+llama-index-llms-gemini==0.6.1
 
 # Embeddings & Transformers
-sentence-transformers==3.3.1
-transformers==4.47.1
-torch==2.5.1
+sentence-transformers==5.1.0
+transformers==4.56.2
+torch==2.8.0
 
 # Translation
 deep-translator==1.11.4
 langdetect==1.0.9
 
 # HTTP Requests
-requests==2.32.3
+requests==2.32.4
 
 # Utilities
-typing-extensions==4.12.2
-pydantic==2.10.5
-pydantic-core==2.27.2
+typing_extensions==4.14.0
+pydantic==2.11.7
+pydantic_core==2.33.2
 
-# CORS Middleware (included with FastAPI but explicitly listed)
+# CORS / Auth
 python-jose[cryptography]==3.3.0
 
-# Additional dependencies for production
-gunicorn==23.0.0
+# Production server
+gunicorn==21.2.0
+
+# Groq / LLM integrations
+llama-index-llms-groq
+groq
+langchain-groq
