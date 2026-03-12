@@ -1,0 +1,58 @@
+# ─────────────────────────────────────────────────────────────────────────────
+#  docker-compose.yml  –  Connect.Ai  (local dev + staging)
+#
+#  Usage:
+#    1. Copy .env.example  →  .env   and fill in your real API keys
+#    2. docker compose up --build
+#
+#  Services:
+#    main-backend       http://localhost:8000
+#    dashboard-backend  http://localhost:8001
+#    dashboard-frontend http://localhost:3000
+# ─────────────────────────────────────────────────────────────────────────────
+
+services:
+
+  # ── 1. Main AI Voice Backend ──────────────────────────────────────────────
+  main-backend:
+    build:
+      context: .              # root of the project
+      dockerfile: Dockerfile
+    container_name: connectai-main-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env                  # all API keys are loaded from here
+    environment:
+      - BASE_URL=${BASE_URL}  # public URL (set to your AWS ALB / domain)
+    volumes:
+      # Mount pdf/ and index_storage/ so data persists across container restarts
+      - ./pdf:/app/pdf
+      - ./index_storage:/app/index_storage
+    restart: unless-stopped
+
+  # ── 2. Dashboard API Backend ──────────────────────────────────────────────
+  dashboard-backend:
+    build:
+      context: ./Dashboard/backend
+      dockerfile: Dockerfile
+    container_name: connectai-dashboard-backend
+    ports:
+      - "8001:8001"
+    env_file:
+      - .env
+    restart: unless-stopped
+    depends_on:
+      - main-backend          # optional; remove if DB is external (e.g. MongoDB Atlas)
+
+  # ── 3. Dashboard React Frontend ───────────────────────────────────────────
+  dashboard-frontend:
+    build:
+      context: ./Dashboard/frontend
+      dockerfile: Dockerfile
+    container_name: connectai-dashboard-frontend
+    ports:
+      - "3000:80"             # nginx inside listens on 80, mapped to host 3000
+    restart: unless-stopped
+    depends_on:
+      - dashboard-backend

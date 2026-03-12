@@ -53,9 +53,12 @@ from twilio.rest import Client
 from langchain_google_genai import ChatGoogleGenerativeAI
 from state_manager import StateManager
 
-# Base URL for webhooks
-BASE_URL = "https://regularly-participating-routing-judgment.trycloudflare.com"
 load_dotenv(override=True)
+
+# Base URL for Twilio webhooks — set this in your .env file.
+# Local dev  → your Cloudflare/ngrok tunnel URL
+# Docker/AWS → your EC2 public IP or domain, e.g. https://yourdomain.com
+BASE_URL = os.getenv("BASE_URL")
 
 # Environment Variables
 DEEPGRAM_API_KEY = os.getenv("DEEPGRAM_API_KEY")
