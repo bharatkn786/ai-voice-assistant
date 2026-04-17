@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { API_BASE } from '../api.js';
+
 
 const UploadDocument = ({ onClose }) => {
   const [file, setFile] = useState(null);
@@ -18,7 +20,7 @@ const UploadDocument = ({ onClose }) => {
     formData.append('file', file);
 
     try {
-      const response = await fetch('http://localhost:8001/api/upload/document', {
+      const response = await fetch(`${API_BASE}/upload/document`, {
         method: 'POST',
         body: formData,
       });

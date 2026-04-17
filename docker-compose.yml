@@ -10,32 +10,33 @@
 #    dashboard-backend  http://localhost:8001
 #    dashboard-frontend http://localhost:3000
 # ─────────────────────────────────────────────────────────────────────────────
+version: "3.8"
 
 services:
 
   # ── 1. Main AI Voice Backend ──────────────────────────────────────────────
   main-backend:
     build:
-      context: .              # root of the project
+      context: .
       dockerfile: Dockerfile
+    image: bharatkn786/connectai-main-backend:latest
     container_name: connectai-main-backend
     ports:
       - "8000:8000"
     env_file:
-      - .env                  # all API keys are loaded from here
+      - .env
     environment:
-      - BASE_URL=${BASE_URL}  # public URL (set to your AWS ALB / domain)
+      - BASE_URL=${BASE_URL}
     volumes:
-      # Mount pdf/ and index_storage/ so data persists across container restarts
       - ./pdf:/app/pdf
       - ./index_storage:/app/index_storage
     restart: unless-stopped
 
-  # ── 2. Dashboard API Backend ──────────────────────────────────────────────
   dashboard-backend:
     build:
       context: ./Dashboard/backend
       dockerfile: Dockerfile
+    image: bharatkn786/connectai-dashboard-backend:latest
     container_name: connectai-dashboard-backend
     ports:
       - "8001:8001"
@@ -43,16 +44,17 @@ services:
       - .env
     restart: unless-stopped
     depends_on:
-      - main-backend          # optional; remove if DB is external (e.g. MongoDB Atlas)
+      - main-backend
 
   # ── 3. Dashboard React Frontend ───────────────────────────────────────────
   dashboard-frontend:
     build:
       context: ./Dashboard/frontend
       dockerfile: Dockerfile
+    image: bharatkn786/connectai-dashboard-frontend:latest
     container_name: connectai-dashboard-frontend
     ports:
-      - "3000:80"             # nginx inside listens on 80, mapped to host 3000
+      - "3000:80"
     restart: unless-stopped
     depends_on:
       - dashboard-backend

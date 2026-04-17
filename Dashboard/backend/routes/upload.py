@@ -34,11 +34,16 @@ async def upload_document(file: UploadFile = File(...)):
         
         print(f"✅ File saved to MongoDB: {file.filename} (ID: {result.inserted_id})")
         
-        # Trigger Main App to process (adjust URL for production)
+        # Trigger Main App to process (URL derived from environment)
         try:
-            MAIN_APP_URL = os.getenv("MAIN_APP_URL", "http://localhost:8000")
+            # Prefer explicit MAIN_APP_URL, otherwise fall back to BASE_URL from root .env,
+            # and finally localhost for local development.
+            base_url = os.getenv("MAIN_APP_URL") or os.getenv("BASE_URL") or "http://localhost:8000"
+            # Ensure no trailing slash before appending path
+            base_url = base_url.rstrip("/")
+
             async with httpx.AsyncClient(timeout=5.0) as client:
-                await client.post(f"{MAIN_APP_URL}/api/process-documents")
+                await client.post(f"{base_url}/api/process-documents")
             print("✅ Main App notified")
         except Exception as e:
             print(f"⚠️ Could not notify Main App: {e}")

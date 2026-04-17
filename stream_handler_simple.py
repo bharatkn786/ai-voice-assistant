@@ -1,14 +1,5 @@
 
 
-
-
-
-# working fine before new stream
-# 📍 logging Usage in stream_handler_simple.py:
-# With this code, you only see warnings and errors from Twilio:
-
-# ❌ ERROR and WARNING messages still show
-# ✅ INFO and DEBUG messages are suppressed
 import json
 import base64
 import asyncio

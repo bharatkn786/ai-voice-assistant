@@ -34,8 +34,13 @@ auth_token = os.getenv("twilio_token")
 def preload_modules():
     start_time = time.time()
     print("🔥 Preloading RAG system to reduce cold start times...")
-    import simple_rag
-    print(f"✅ Simple RAG system preloaded in {time.time() - start_time:.2f} seconds")
+    try:
+        import simple_rag
+        simple_rag.warmup_rag_cache()
+        print(f"✅ Simple RAG system preloaded in {time.time() - start_time:.2f} seconds")
+    except Exception as e:
+        # Do not block app startup if preload fails.
+        print(f"⚠️ RAG preload failed: {e}")
 
 # Start preloading in background
 threading.Thread(target=preload_modules, daemon=True).start()
@@ -317,7 +322,8 @@ def process_uploaded_documents():
             try:
                 import simple_rag
                 simple_rag._RAG_COMPONENTS = None
-                print("✅ RAG cache cleared - new index will be loaded on next query")
+                simple_rag.warmup_rag_cache()
+                print("✅ RAG cache refreshed with updated index")
             except Exception as e:
                 print(f"⚠️ Could not clear cache: {e}")
         

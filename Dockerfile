@@ -28,4 +28,4 @@ EXPOSE 8000
 
 # ── Run with uvicorn ──
 #    HOST must be 0.0.0.0 so Docker can route traffic in
-CMD ["uvicorn", "hello:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "hello:app", "--host", "0.0.0.0", "--port", "8000", "--proxy-headers", "--forwarded-allow-ips=*"]

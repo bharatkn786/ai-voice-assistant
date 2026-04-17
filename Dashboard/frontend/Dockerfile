@@ -25,20 +25,20 @@ FROM nginx:alpine
 COPY --from=builder /app/build /usr/share/nginx/html
 
 # Optional: override nginx config to handle React Router (SPA)
-RUN echo 'server { \
-    listen 80; \
-    location / { \
-        root /usr/share/nginx/html; \
-        index index.html; \
-        try_files $uri $uri/ /index.html; \
-    } \
-    # Proxy API calls to dashboard backend (used in production) \
-    location /api/ { \
-        proxy_pass http://dashboard-backend:8001/; \
-        proxy_set_header Host $host; \
-        proxy_set_header X-Real-IP $remote_addr; \
-    } \
-}' > /etc/nginx/conf.d/default.conf
+RUN printf 'server {\n\
+    listen 80;\n\
+    location / {\n\
+        root /usr/share/nginx/html;\n\
+        index index.html;\n\
+        try_files $uri $uri/ /index.html;\n\
+    }\n\
+    location /api/ {\n\
+        proxy_pass http://connectai-dashboard-backend:8001/;\n\
+        proxy_set_header Host $host;\n\
+        proxy_set_header X-Real-IP $remote_addr;\n\
+    }\n\
+}\n' > /etc/nginx/conf.d/default.conf
+
 
 EXPOSE 80
 

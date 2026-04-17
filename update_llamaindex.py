@@ -110,13 +110,16 @@ def main():
     print("\n===== 🔄 RAG System Update =====\n")
     
     if os.path.exists(INDEX_STORAGE_PATH):
-        print(f"🗑️ Deleting old index at {INDEX_STORAGE_PATH}...")
+        print(f"🗑️ Clearing old index at {INDEX_STORAGE_PATH}...")
         try:
-            shutil.rmtree(INDEX_STORAGE_PATH)
-            print("✓ Old index deleted successfully.")
+            for f in os.listdir(INDEX_STORAGE_PATH):
+                fp = os.path.join(INDEX_STORAGE_PATH, f)
+                if os.path.isfile(fp):
+                    os.remove(fp)
+            print("✓ Old index cleared successfully.")
         except OSError as e:
-            print(f"❌ Error deleting old index: {e.strerror}")
-            return # Exit if we can't delete the old index
+            print(f"⚠️ Could not clear, continuing anyway...")
+            
     # Load documents
     documents = load_documents()
     if not documents:

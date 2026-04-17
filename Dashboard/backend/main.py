@@ -1,3 +1,6 @@
+
+from dotenv import load_dotenv
+load_dotenv()  # Add this at the very top
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes import calls, upload
