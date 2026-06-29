@@ -343,7 +343,7 @@ async def trigger_process():
 
 if __name__ == "__main__":
     import uvicorn
-    print("🚀 Starting Chitkara University AI Voice Assistant Server...")
+    print("🚀 Starting Chitkara University AI Voice Assistant Server")
     print("📞 Server ready to handle new calls!")
     print("⚡ RAG system will preload in the background")
     uvicorn.run(app, host="0.0.0.0", port=8000)
